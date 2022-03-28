@@ -1,62 +1,59 @@
-from turtle import circle
 import numpy as np
-from random import randint, random
+from random import randint
+from math import ceil
 import cv2
 
-RAND_MAX = 32767
-maskSize = (25, 25)
-mapMin = np.zeros(maskSize) - 1
-counter = 0
-randomImages = 50
+map = None
 
 class ImageData:
-    def __init__(self, size=(1024,1024,1), circleSize = 5, imageSize = 625, 
-     imageDensity = 0.02, circles=5):
+    def __init__(self, maskSize, cellSize, size=(1024,1024,1), circleSize = 5,imageDensity = 0.02):
+        global map
+        self.map = np.zeros(maskSize)
         self.size = size
+        self.cellSize = cellSize
         self.circleSize = circleSize
-        self.imageSize = imageSize
-        self.lowerRange = self.getLowerRange()
-        self.upperRange = -self.imageSize / 2
         self.imageDensity = imageDensity
-        self.circles = circles
-
-    def getLowerRange(self):
-        return self.circleSize[0] - self.imageSize - self.imageSize / 2
+        self.circles = ceil(imageDensity * maskSize[0]*maskSize[1])
+        self.maskSize = maskSize
+        self.counter = 0
+        self.mapMin = 0
 
 
 class Image:
     def randomMatrix(imageData: ImageData):
-        global mapMin, counter, maskSize
-        map = np.zeros(maskSize)
         # generate a blank image
-        random = np.zeros(imageData.size, dtype=np.uint8)
+        img = np.zeros(imageData.size, dtype=np.uint8)
         # generate a random distribution
-        dist = np.random.uniform(0, maskSize[0], size=100)
+        dist = np.random.uniform(0, imageData.maskSize[0], size=100)
         circleSize = imageData.circleSize
-        minusCircleSize = circleSize - 1
-        
-        for index in range(imageData.circles):
-            toContinue = True
-            while toContinue:
+        cellSize = imageData.cellSize
+        # generate a distribution from 0 t0 1 for moving around the cell
+        dist_coord = np.random.uniform(0, 1.0, 20)
+        for _ in range(imageData.circles):
+            while True:
                 
-                # generate the random points within the mask
-                randCol = int(dist[randint(0,25)])
-                randRow = int(dist[randint(0,25)])
-                X = int( circleSize + randint(0, 25)  / \
-                    (randint(0, 25) (minusCircleSize - circleSize)))
-                Y = int( circleSize + randint(0, 25)  / \
-                    (randint(0, 25) (minusCircleSize - circleSize)))
+                # get the cell in which we are going to draw the circle
+                randCol = int(dist[randint(0,99)])
+                randRow = int(dist[randint(0,99)])
+                # get the center coords inside the cell
+                X = int( circleSize + dist_coord[randint(0,19)]  * (cellSize[0] - circleSize))
+                Y = int( circleSize + dist_coord[randint(0,19)]  * (cellSize[0] - circleSize))
 
-                if mapMin[randRow][randCol] == mapMin:
-                    mapMin[randRow][randCol] += 1
-                    toContinue = False
-                    cv2.circle(random, (200 + randRow * 25 + X, 200 + randCol * 25 + Y), circleSize, 255, -1)
-                    counter += 1
-                else:
-                    toContinue = True
-
-                if counter % imageData.imageSize == 0:
-                    mapMin += 1
-        return random
-
-        
+                # the start from both axes (upper right corner)
+                ## height - ( Cell.Height * Cell.Num  / 2)
+                start_point = int( (imageData.size[0] - cellSize[0] * imageData.maskSize[0]) / 2)
+                
+                # draw one circle per cell
+                if imageData.map[randCol][randRow] == 0:
+                    
+                    # making unavailable this cell
+                    imageData.map[randCol][randRow] = 1
+                    # draw a circle
+                    cv2.circle(img, (start_point + randRow * 25 + X, start_point + randCol * 25 + Y), \
+                         circleSize, 255, -1)
+                    imageData.counter += 1
+                    break
+                # verifying if all cells have been used
+                if imageData.counter >= imageData.maskSize[0]*imageData.maskSize[1]:
+                    break
+        return (img, imageData.counter)

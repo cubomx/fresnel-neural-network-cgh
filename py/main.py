@@ -1,8 +1,13 @@
 import cv2
-from random import randint
 from utilities import Utilities
-print(cv2.__version__)
+from image import Image, ImageData
 
-print( Utilities.gen() )
+myData = ImageData(maskSize=(25,25), cellSize=(20, 20))
 
-print( Utilities.generateRandomString(10))
+num_Images = 50
+for i in range(num_Images):
+    randomName =  Utilities.generateRandomString(10)
+    new_image, counter = Image.randomMatrix(myData)
+    if i == 49:
+        print(counter)
+    cv2.imwrite("images/" + randomName + '.png', new_image)
