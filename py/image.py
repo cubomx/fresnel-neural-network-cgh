@@ -4,7 +4,7 @@ from math import ceil
 import cv2
 
 map = None
-
+minimio = 100000
 class ImageData:
     def __init__(self, maskSize, cellSize, size=(1024,1024,1), circleSize = 5,imageDensity = 0.02):
         global map
@@ -21,6 +21,8 @@ class ImageData:
 
 class Image:
     def randomMatrix(imageData: ImageData):
+        
+        global minimio
         # generate a blank image
         img = np.zeros(imageData.size, dtype=np.uint8)
         # generate a random distribution
@@ -43,14 +45,21 @@ class Image:
                 ## height - ( Cell.Height * Cell.Num  / 2)
                 start_point = int( (imageData.size[0] - cellSize[0] * imageData.maskSize[0]) / 2)
                 
+                
                 # draw one circle per cell
                 if imageData.map[randCol][randRow] == 0:
                     
                     # making unavailable this cell
                     imageData.map[randCol][randRow] = 1
+                    # p0 + range(0-24) * 25 + ?
+                    x = start_point + randRow * cellSize[0] + X
+                    y = start_point + randCol * cellSize[0] + Y
+                    
+                    minimio = min(minimio, x)
+                    if imageData.counter > 610:
+                        print(minimio)
                     # draw a circle
-                    cv2.circle(img, (start_point + randRow * 25 + X, start_point + randCol * 25 + Y), \
-                         circleSize, 255, -1)
+                    cv2.circle(img, (x, y), circleSize, 255, -1)
                     imageData.counter += 1
                     break
                 # verifying if all cells have been used
