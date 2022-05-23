@@ -1,14 +1,4 @@
-'''import os
-suma = 0
-for file in os.listdir("images9__3"):
-    if file.endswith(".png"):
-        print(os.path.join("/mydir", file))
 
-
-filename = "images9__1/"
-print(os.path.abspath(filename))'''
-
-import numpy as np 
 from keras.models import *
 from keras.layers import *
 from keras.optimizers import *
