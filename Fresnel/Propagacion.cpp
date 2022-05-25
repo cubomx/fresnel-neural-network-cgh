@@ -129,11 +129,11 @@ void mostrarMagPha(Mat& real, Mat& imag)
 	phasmat = (phasmat / (2 * M_PI)) * 255.0;
 	Mat phaseview = phasmat.clone();
 	phasmat.convertTo(phaseview, CV_8U);
-	namedWindow("phase imag", WINDOW_NORMAL);
+	/*namedWindow("phase imag", WINDOW_NORMAL);
 	resizeWindow("phase imag", 500, 500);
 	imshow("phase imag", phaseview);
 
-	waitKey(10);
+	waitKey(10);*/
 
 	double mmin, mmax;
 	cv::minMaxLoc(mag, &mmin, &mmax);
@@ -141,10 +141,12 @@ void mostrarMagPha(Mat& real, Mat& imag)
 	mag = (mag / mmax) * 255.0;
 	Mat magview = mag.clone();
 	mag.convertTo(magview, CV_8U);
-	namedWindow("magnitude", WINDOW_NORMAL);
+
+	/*namedWindow("magnitude", WINDOW_NORMAL);
 	imshow("magnitude", magview);
 	resizeWindow("magnitude", 500, 500);
-	waitKey(10);
+	waitKey(10);*/
+
 	/*magview.setTo(0.0);
 	imshow("magnitude", magview);
 	resizeWindow("magnitude", 500, 500);
@@ -164,10 +166,10 @@ void normaliza255(Mat& ori, Mat& dest)
 	tmp = (tmp -mmin)/ range * 255.0;
 
 	tmp.convertTo(dest, CV_8U);
-	namedWindow("normalizada", WINDOW_NORMAL);
+	/*namedWindow("normalizada", WINDOW_NORMAL);
 	imshow("normalizada", dest);
 	resizeWindow("normalizada", 500, 500);
-	waitKey(10);
+	waitKey(10);*/
 	return;
 }
 
@@ -190,7 +192,6 @@ void GetMagPha(Mat& real, Mat& imag, Mat& magmat, Mat& phasmat)
 	Mat phaseview = phasmat.clone();
 	phaseview.convertTo(phasmat, CV_8U);
 
-	waitKey(10);
 
 }
 //*****************************************************************************

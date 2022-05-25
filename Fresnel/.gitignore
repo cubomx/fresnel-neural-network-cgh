@@ -1,4 +1,6 @@
 
+holos/
+
 *.swp
 *.*~
 project.lock.json
