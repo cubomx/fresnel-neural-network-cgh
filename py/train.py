@@ -1,33 +1,42 @@
 
+from lib2to3.pgen2.tokenize import untokenize
 import cv2
 files = []
 import os
+from model import unet
+import tensorflow as tf
 
 
-sizes = [3, 5, 9]
-quantities = [1, 2, 3]
+def divide_images(isTraining, directory):
+    type_subset = 'validation'
+    if isTraining:
+        type_subset = 'training'
 
-def get_images(folder_name, images):
-    for file in os.listdir(folder_name):
-        if file.endswith(".png"):
-            filename = os.path.join(folder_name, file)
-            images.append(cv2.imread(filename, 0))
+    result = tf.keras.utils.image_dataset_from_directory(
+    directory,
+    labels="inferred",
+    label_mode="int",
+    class_names=None,
+    color_mode="grayscale",
+    batch_size=32,
+    image_size=(512, 512),
+    shuffle=True,
+    seed=10,
+    validation_split=0.2,
+    subset=type_subset
+    )
 
-    return images
+    return result
 
-prefix = 'cropped'
-images = []
-for size in sizes:
-    for quantity in quantities:
-        images = get_images(prefix + str(size) +  "__" + str(quantity), images)
-
-
-print(len(images))
-
-
-
-
-
+directory = "images" 
 
 
+training = divide_images(True, directory)
+#validation = divide_images(False, directory)
+training = training.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
 
+model = unet()
+
+#model.fit_generator(myGene,steps_per_epoch=300,epochs=1)
+
+model.fit(training, batch_size=32, epochs=5)

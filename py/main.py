@@ -5,13 +5,14 @@ from image import Image, ImageData
 from copy import deepcopy as dp
 import numpy as np
 
+father_path = 'images/'
 sizes = [3, 5, 9]
 circlesQuantity = [1, 2, 3]
 for circleQuan in circlesQuantity:
     print("hiho")
     for size in sizes:
-        Utilities.clean(True, "images" + str(size) + "__" +  str(circleQuan) + "/", True)
-        Utilities.clean(True, "cropped" + str(size) +  "__" +  str(circleQuan) + "/", True)
+        Utilities.clean(True, father_path + "images" + str(size) + "__" +  str(circleQuan) + "/", True)
+        Utilities.clean(True, father_path + "cropped" + str(size) +  "__" +  str(circleQuan) + "/", True)
 
         myData = ImageData(maskSize=(25,25), cellSize=(20, 20), circleSize=size, 
         imageDensity=0.02*circleQuan, circleQuan=circleQuan, mapMin=circleQuan)
@@ -51,9 +52,9 @@ for circleQuan in circlesQuantity:
 
                 if i == 49:
                     print(counti)
-                cv2.imwrite("images" + str(size) +  "__" +  str(circleQuan) + "/" + randomName + '.png', new_image)
+                cv2.imwrite(father_path + "images" + str(size) +  "__" +  str(circleQuan) + "/" + randomName + '.png', new_image)
                 # crop image
                 
-                cv2.imwrite("cropped" + str(size) +  "__" +  str(circleQuan) + "/" + randomName + '.png', new_image[limit:sizeX-limit, limit:sizeY-limit])
+                cv2.imwrite(father_path + "cropped" + str(size) +  "__" +  str(circleQuan) + "/" + randomName + '.png', new_image[limit:sizeX-limit, limit:sizeY-limit])
             else:
                 break

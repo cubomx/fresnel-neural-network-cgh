@@ -81,12 +81,14 @@ void generateHolo(string srcImage, string folder, int numImag) {
 	imwrite(fullPath + "ampHolo.png", Uprop[0].rowRange(dify / 2, dify / 2 + 512).colRange(dify / 2, dify / 2 + 512));
 	imwrite(fullPath + "phaseHolo.png", Uprop[1].rowRange(dify / 2, dify / 2 + 512).colRange(dify / 2, dify / 2 + 512));
 
-	normaliza255(Ftot[0], Uprop[0]);
+	/*normaliza255(Ftot[0], Uprop[0]);
 	normaliza255(Ftot[1], Uprop[1]);
+	*/
 
-	imwrite(fullPath + "realProp.png", Uprop[0].rowRange(dify / 2, dify / 2 + 512).colRange(dify / 2, dify / 2 + 512));
+
+	/*imwrite(fullPath + "realProp.png", Uprop[0].rowRange(dify / 2, dify / 2 + 512).colRange(dify / 2, dify / 2 + 512));
 	imwrite(fullPath + "imagProp.png", Uprop[1].rowRange(dify / 2, dify / 2 + 512).colRange(dify / 2, dify / 2 + 512));
-
+	*/
 	int a = 1;
 }
 
@@ -94,8 +96,10 @@ void generateHolo(string srcImage, string folder, int numImag) {
 int main()
 {
 	int numImag = 1;
-	string directory = "../py/cropped3__1";
-	string dstFolder = "holos/";
+	string specificDir = "/cropped3__3/";
+	string directory = "../py/images" + specificDir;
+	string dstFolder = "holos" + specificDir;
+	fs::create_directory(dstFolder);
 
 	for (const auto& entry : fs::directory_iterator(directory)) {
 		string imagePath = entry.path().generic_string();
